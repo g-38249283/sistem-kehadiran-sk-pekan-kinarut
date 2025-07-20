@@ -9,12 +9,22 @@ export default async (req, context) => {
 
   try {
     const sql = neon(process.env.DATABASE_URL);
-    const { name, addedBy } = await req.json();
+    const { date, day, pitClass, teacher, students } = await req.json();
     
+    // Delete existing records for this date and class
     await sql`
-      INSERT INTO teachers (name, added_by) 
-      VALUES (${name}, ${addedBy})
+      DELETE FROM attendance_records 
+      WHERE date = ${date} AND pit_class = ${pitClass}
     `;
+    
+    // Insert new attendance records
+    for (const student of students) {
+      await sql`
+        INSERT INTO attendance_records 
+        (date, day, pit_class, teacher, student_name, student_gender, original_class, present)
+        VALUES (${date}, ${day}, ${pitClass}, ${teacher}, ${student.name}, ${student.gender}, ${student.originalClass}, ${student.present})
+      `;
+    }
     
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
