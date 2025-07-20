@@ -1,0 +1,1807 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rekod Kehadiran Murid Tahun 1 - SK Pekan Kinarut 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .slide-in {
+            animation: slideIn 0.4s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-6 shadow-lg">
+        <div class="container mx-auto px-4">
+            <h1 class="text-2xl md:text-3xl font-bold text-center">
+                REKOD KEHADIRAN MURID TAHUN 1
+            </h1>
+            <p class="text-center text-blue-100 mt-2">SK PEKAN KINARUT 2025</p>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container mx-auto px-4 py-8">
+        <!-- Page 1: Teacher Selection -->
+        <div id="page1" class="fade-in">
+            <div class="max-w-md mx-auto bg-white rounded-xl shadow-lg p-8">
+                <h2 class="text-xl font-semibold text-gray-800 mb-6 text-center">Pilih Nama Guru</h2>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Nama Guru:</label>
+                    <select id="teacherSelect" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <!-- Will be populated dynamically -->
+                    </select>
+                </div>
+                <button onclick="proceedToMenu()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200">
+                    Teruskan
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 2: Main Menu -->
+        <div id="page2" class="hidden fade-in">
+            <div class="max-w-2xl mx-auto">
+                <div class="bg-white rounded-xl shadow-lg p-8 mb-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-2">Selamat Datang, <span id="selectedTeacher" class="text-blue-600"></span></h2>
+                    <p class="text-gray-600 mb-6">Pilih tindakan yang ingin dilakukan:</p>
+                    
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <button onclick="showAttendanceForm()" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-lg transition duration-200 flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                            </svg>
+                            Pengisian Kehadiran
+                        </button>
+                        <button onclick="showDailyRecord()" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-4 px-6 rounded-lg transition duration-200 flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                            Rekod Kehadiran Harian
+                        </button>
+                        <button onclick="showDataManagement()" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-4 px-6 rounded-lg transition duration-200 flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"></path>
+                            </svg>
+                            Urus Data
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Today's Submitted Classes -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Kelas Yang Telah Menghantar Kehadiran Hari Ini</h3>
+                    <div id="todaySubmissions" class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                        <!-- Will be populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Weekly Analysis -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Analisis Kehadiran Minggu Ini</h3>
+                    <div id="weeklyAnalysis" class="space-y-4">
+                        <!-- Will be populated dynamically -->
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <!-- Page 3: Attendance Form -->
+        <div id="page3" class="hidden fade-in">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-semibold text-gray-800">Pengisian Kehadiran</h2>
+                        <button onclick="showMenu()" class="text-blue-600 hover:text-blue-800 font-medium">← Kembali</button>
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-4 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tarikh:</label>
+                            <input type="date" id="attendanceDate" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Hari:</label>
+                            <select id="attendanceDay" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                <option value="">-- Pilih Hari --</option>
+                                <option value="Isnin">Isnin</option>
+                                <option value="Selasa">Selasa</option>
+                                <option value="Rabu">Rabu</option>
+                                <option value="Khamis">Khamis</option>
+                                <option value="Jumaat">Jumaat</option>
+                                <option value="Sabtu">Sabtu</option>
+                                <option value="Ahad">Ahad</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Kelas PIT:</label>
+                            <select id="pitClass" onchange="loadStudents()" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                <option value="">-- Pilih Kelas PIT --</option>
+                                <option value="1 MARIKH">1 MARIKH</option>
+                                <option value="1 MUSYTARI">1 MUSYTARI</option>
+                                <option value="1 NEPTUN">1 NEPTUN</option>
+                                <option value="1 UTARID">1 UTARID</option>
+                                <option value="1 URANUS">1 URANUS</option>
+                                <option value="1 ZUHAL">1 ZUHAL</option>
+                                <option value="1 ZUHRAH">1 ZUHRAH</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="studentsList" class="hidden">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Senarai Murid</h3>
+                        <div id="studentsContainer" class="space-y-2 mb-6">
+                            <!-- Students will be loaded here -->
+                        </div>
+                        <div class="flex gap-4">
+                            <button onclick="previewAttendance()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200">
+                                Hantar Kehadiran
+                            </button>
+                            <button onclick="selectAll()" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
+                                Pilih Semua
+                            </button>
+                            <button onclick="clearAll()" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
+                                Kosongkan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 4: Daily Record -->
+        <div id="page4" class="hidden fade-in">
+            <div class="max-w-6xl mx-auto">
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-semibold text-gray-800">Rekod Kehadiran Harian</h2>
+                        <button onclick="showMenu()" class="text-blue-600 hover:text-blue-800 font-medium">← Kembali</button>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tarikh:</label>
+                            <input type="date" id="recordDate" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Kelas Asal:</label>
+                            <select id="originalClass" onchange="loadDailyRecord()" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                <option value="">-- Pilih Kelas Asal --</option>
+                                <option value="1 MARIKH">1 MARIKH</option>
+                                <option value="1 MUSYTARI">1 MUSYTARI</option>
+                                <option value="1 NEPTUN">1 NEPTUN</option>
+                                <option value="1 UTARID">1 UTARID</option>
+                                <option value="1 URANUS">1 URANUS</option>
+                                <option value="1 ZUHAL">1 ZUHAL</option>
+                                <option value="1 ZUHRAH">1 ZUHRAH</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="dailyRecordContainer" class="hidden">
+                        <!-- Daily record will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 5: Data Management -->
+        <div id="page5" class="hidden fade-in">
+            <div class="max-w-6xl mx-auto">
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-semibold text-gray-800">Urus Data Sistem</h2>
+                        <button onclick="showMenu()" class="text-blue-600 hover:text-blue-800 font-medium">← Kembali</button>
+                    </div>
+
+                    <!-- Tab Navigation -->
+                    <div class="flex border-b border-gray-200 mb-6">
+                        <button onclick="showDataTab('addStudent')" id="addStudentTab" class="px-6 py-3 font-medium text-blue-600 border-b-2 border-blue-600">
+                            Tambah Murid
+                        </button>
+                        <button onclick="showDataTab('addTeacher')" id="addTeacherTab" class="px-6 py-3 font-medium text-gray-500 hover:text-gray-700">
+                            Tambah Guru
+                        </button>
+                        <button onclick="showDataTab('editStudent')" id="editStudentTab" class="px-6 py-3 font-medium text-gray-500 hover:text-gray-700">
+                            Edit Murid
+                        </button>
+                    </div>
+
+                    <!-- Add Student Tab -->
+                    <div id="addStudentContent" class="tab-content">
+                        <form id="addStudentForm" class="space-y-6">
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Nama Murid:</label>
+                                    <input type="text" id="newStudentName" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Masukkan nama penuh murid" required>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Jantina:</label>
+                                    <select id="newStudentGender" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                        <option value="">-- Pilih Jantina --</option>
+                                        <option value="L">Lelaki</option>
+                                        <option value="P">Perempuan</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Kelas PIT:</label>
+                                    <select id="newStudentPitClass" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                        <option value="">-- Pilih Kelas PIT --</option>
+                                        <option value="1 MARIKH">1 MARIKH</option>
+                                        <option value="1 MUSYTARI">1 MUSYTARI</option>
+                                        <option value="1 NEPTUN">1 NEPTUN</option>
+                                        <option value="1 UTARID">1 UTARID</option>
+                                        <option value="1 URANUS">1 URANUS</option>
+                                        <option value="1 ZUHAL">1 ZUHAL</option>
+                                        <option value="1 ZUHRAH">1 ZUHRAH</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Kelas Asal:</label>
+                                    <select id="newStudentOriginalClass" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                        <option value="">-- Pilih Kelas Asal --</option>
+                                        <option value="1 MARIKH">1 MARIKH</option>
+                                        <option value="1 MUSYTARI">1 MUSYTARI</option>
+                                        <option value="1 NEPTUN">1 NEPTUN</option>
+                                        <option value="1 UTARID">1 UTARID</option>
+                                        <option value="1 URANUS">1 URANUS</option>
+                                        <option value="1 ZUHAL">1 ZUHAL</option>
+                                        <option value="1 ZUHRAH">1 ZUHRAH</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-blue-800 mb-2">Maklumat Tambahan:</h4>
+                                <p class="text-sm text-blue-700 mb-2">
+                                    <strong>Guru yang menambah:</strong> <span id="addingTeacher"></span>
+                                </p>
+                                <p class="text-sm text-blue-700">
+                                    <strong>Tarikh ditambah:</strong> <span id="addingDate"></span>
+                                </p>
+                            </div>
+
+                            <div class="flex gap-4">
+                                <button type="button" onclick="previewNewStudent()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200">
+                                    Preview & Tambah
+                                </button>
+                                <button type="button" onclick="clearAddStudentForm()" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200">
+                                    Kosongkan
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Recently Added Students -->
+                        <div class="bg-gray-50 rounded-xl p-6 mt-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Murid Yang Baru Ditambah</h3>
+                            <div id="recentlyAddedStudents">
+                                <!-- Will be populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add Teacher Tab -->
+                    <div id="addTeacherContent" class="tab-content hidden">
+                        <form id="addTeacherForm" class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Nama Guru:</label>
+                                <input type="text" id="newTeacherName" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Masukkan nama penuh guru" required>
+                            </div>
+
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-blue-800 mb-2">Maklumat Tambahan:</h4>
+                                <p class="text-sm text-blue-700 mb-2">
+                                    <strong>Ditambah oleh:</strong> <span id="addingTeacherBy"></span>
+                                </p>
+                                <p class="text-sm text-blue-700">
+                                    <strong>Tarikh ditambah:</strong> <span id="addingTeacherDate"></span>
+                                </p>
+                            </div>
+
+                            <div class="flex gap-4">
+                                <button type="button" onclick="previewNewTeacher()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200">
+                                    Preview & Tambah
+                                </button>
+                                <button type="button" onclick="clearAddTeacherForm()" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200">
+                                    Kosongkan
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Recently Added Teachers -->
+                        <div class="bg-gray-50 rounded-xl p-6 mt-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Guru Yang Baru Ditambah</h3>
+                            <div id="recentlyAddedTeachers">
+                                <!-- Will be populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Edit Student Tab -->
+                    <div id="editStudentContent" class="tab-content hidden">
+                        <div class="mb-6">
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Cari Murid:</label>
+                                    <input type="text" id="searchStudent" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Taip nama murid untuk cari..." oninput="searchStudents()">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Filter Kelas:</label>
+                                    <select id="filterClass" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" onchange="searchStudents()">
+                                        <option value="">-- Semua Kelas --</option>
+                                        <option value="1 MARIKH">1 MARIKH</option>
+                                        <option value="1 MUSYTARI">1 MUSYTARI</option>
+                                        <option value="1 NEPTUN">1 NEPTUN</option>
+                                        <option value="1 UTARID">1 UTARID</option>
+                                        <option value="1 URANUS">1 URANUS</option>
+                                        <option value="1 ZUHAL">1 ZUHAL</option>
+                                        <option value="1 ZUHRAH">1 ZUHRAH</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="studentSearchResults" class="space-y-3">
+                            <!-- Search results will appear here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- New Teacher Preview Modal -->
+        <div id="newTeacherPreviewModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-xl shadow-xl p-8 max-w-lg w-full mx-4">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Preview Guru Baru</h3>
+                <div id="newTeacherPreviewContent" class="mb-6">
+                    <!-- Preview content will be shown here -->
+                </div>
+                <div class="flex gap-4">
+                    <button onclick="confirmAddTeacher()" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200">
+                        Tambah Guru
+                    </button>
+                    <button onclick="closeNewTeacherPreview()" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
+                        Edit
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Student Preview Modal -->
+        <div id="newStudentPreviewModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-xl shadow-xl p-8 max-w-lg w-full mx-4">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Preview Murid Baru</h3>
+                <div id="newStudentPreviewContent" class="mb-6">
+                    <!-- Preview content will be shown here -->
+                </div>
+                <div class="flex gap-4">
+                    <button onclick="confirmAddStudent()" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200">
+                        Tambah Murid
+                    </button>
+                    <button onclick="closeNewStudentPreview()" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
+                        Edit
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance Preview Modal -->
+        <div id="previewModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-xl shadow-xl p-8 max-w-2xl w-full mx-4 max-h-96 overflow-y-auto">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Preview Kehadiran</h3>
+                <div id="previewContent" class="mb-6">
+                    <!-- Preview content will be shown here -->
+                </div>
+                <div class="flex gap-4">
+                    <button onclick="submitAttendance()" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200">
+                        Hantar
+                    </button>
+                    <button onclick="closePreview()" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
+                        Edit
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis Modal -->
+        <div id="analysisModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-xl shadow-xl p-8 max-w-lg w-full mx-4">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Analisis Ketidakhadiran</h3>
+                <div id="analysisContent" class="mb-6">
+                    <!-- Analysis content will be shown here -->
+                </div>
+                <button onclick="closeAnalysis()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200">
+                    Tutup
+                </button>
+            </div>
+        </div>
+
+        <!-- Edit Student Modal -->
+        <div id="editStudentModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-xl shadow-xl p-8 max-w-lg w-full mx-4">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Edit Maklumat Murid</h3>
+                <form id="editStudentForm" class="space-y-4">
+                    <input type="hidden" id="editStudentId">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nama Murid:</label>
+                        <input type="text" id="editStudentName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" readonly>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Jantina:</label>
+                        <input type="text" id="editStudentGender" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50" readonly>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Kelas PIT:</label>
+                        <select id="editStudentPitClass" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            <option value="1 MARIKH">1 MARIKH</option>
+                            <option value="1 MUSYTARI">1 MUSYTARI</option>
+                            <option value="1 NEPTUN">1 NEPTUN</option>
+                            <option value="1 UTARID">1 UTARID</option>
+                            <option value="1 URANUS">1 URANUS</option>
+                            <option value="1 ZUHAL">1 ZUHAL</option>
+                            <option value="1 ZUHRAH">1 ZUHRAH</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Kelas Asal:</label>
+                        <select id="editStudentOriginalClass" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            <option value="1 MARIKH">1 MARIKH</option>
+                            <option value="1 MUSYTARI">1 MUSYTARI</option>
+                            <option value="1 NEPTUN">1 NEPTUN</option>
+                            <option value="1 UTARID">1 UTARID</option>
+                            <option value="1 URANUS">1 URANUS</option>
+                            <option value="1 ZUHAL">1 ZUHAL</option>
+                            <option value="1 ZUHRAH">1 ZUHRAH</option>
+                        </select>
+                    </div>
+                    <div class="bg-yellow-50 p-3 rounded-lg">
+                        <p class="text-sm text-yellow-800">
+                            <strong>Perhatian:</strong> Perubahan ini akan mempengaruhi semua rekod kehadiran yang akan datang.
+                        </p>
+                    </div>
+                </form>
+                <div class="flex gap-4 mt-6">
+                    <button onclick="saveStudentEdit()" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200">
+                        Simpan
+                    </button>
+                    <button onclick="closeEditStudentModal()" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
+                        Batal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Real student data with PIT class and original class
+        const studentsData = {
+            "1 MARIKH": [
+                {name: "AHMAD EVAN RAYYAN BIN ABDUL RAQIB", gender: "L", originalClass: "1 MARIKH"},
+                {name: "AHMAD RAFIQ BIN RUMAD", gender: "L", originalClass: "1 URANUS"},
+                {name: "AL FATTAH ZAIHAN BIN AL FIANSHAH", gender: "L", originalClass: "1 MARIKH"},
+                {name: "ARIANA BINTI ANUAR", gender: "P", originalClass: "1 MARIKH"},
+                {name: "AYRA ALISHA BINTI ABDULLAH", gender: "P", originalClass: "1 URANUS"},
+                {name: "CITRA ADRIANA BINTI MOHD SAFWAN", gender: "P", originalClass: "1 MARIKH"},
+                {name: "DANISH SYAFIZAL AMIN BIN ABDULLAH", gender: "L", originalClass: "1 URANUS"},
+                {name: "DAYANG NUREN DELISHA BINTI ABDULLAH", gender: "P", originalClass: "1 UTARID"},
+                {name: "HAZRAZIQ ALHAFIY BIN HASROY", gender: "L", originalClass: "1 URANUS"},
+                {name: "HUMAIRA HARISSA BINTI RISAL", gender: "P", originalClass: "1 MARIKH"},
+                {name: "MIYA NATALIA BINTI WAN RASSELL SAFRI", gender: "P", originalClass: "1 MARIKH"},
+                {name: "MOHAMAD FIRDZAN DIZZRY BIN NORAZMI", gender: "L", originalClass: "1 MARIKH"},
+                {name: "MUHAMAD NUR ASHRAFF BIN RAZALI", gender: "L", originalClass: "1 MARIKH"},
+                {name: "MUHAMAD SUFIAN YUSUF BIN ABDUL BAKI", gender: "L", originalClass: "1 URANUS"},
+                {name: "MOHAMMAD AZIZUL FIKRI BIN HAFIZAN", gender: "L", originalClass: "1 MARIKH"},
+                {name: "MUHAMMAD AMMAR BIN HISHAM", gender: "L", originalClass: "1 MARIKH"},
+                {name: "MUHAMMAD AMZAR BIN JAMALUDDIN", gender: "L", originalClass: "1 MARIKH"},
+                {name: "MUHAMMAD FIRAS BIN ABDULLAH", gender: "L", originalClass: "1 URANUS"},
+                {name: "MUHAMMAD HARRIS BIN JAKLI", gender: "L", originalClass: "1 MARIKH"},
+                {name: "NAUFAL NAQIUDDIN BIN MOHD AZMEE", gender: "L", originalClass: "1 MARIKH"},
+                {name: "NUR AAIRA ALEEYA MIKAYLA BINTI MOHD ZAINIDDIN", gender: "P", originalClass: "1 UTARID"},
+                {name: "NUR AFIQAH IFFAH BINTI JUSMAN", gender: "P", originalClass: "1 MARIKH"},
+                {name: "NUR ATIQAH IZZATI BINTI AMAN SHAH ANDING", gender: "P", originalClass: "1 URANUS"},
+                {name: "NUR AYRA AMEERA BINTI ARMAN", gender: "P", originalClass: "1 MARIKH"},
+                {name: "NUR FARANISA BINTI AZALAN", gender: "P", originalClass: "1 MARIKH"},
+                {name: "NUR FIKA AKILAH BINTI RIDHWAN", gender: "P", originalClass: "1 URANUS"},
+                {name: "NUR IZZATUNNISA SYIFFA BINTI MOHAMMAD AZROL", gender: "P", originalClass: "1 MARIKH"},
+                {name: "NUR KHAIRA BINTI RAFFIE", gender: "P", originalClass: "1 MARIKH"},
+                {name: "NUR RAMADANIAH DAHLIA BINTI SURANO", gender: "P", originalClass: "1 URANUS"},
+                {name: "NUR SHAFIYAH FARIHAH BINTI SHAZWAN SAH", gender: "P", originalClass: "1 MARIKH"},
+                {name: "NURUL AINA SHAFIKA BINTI SABLI", gender: "P", originalClass: "1 MARIKH"},
+                {name: "NURJANNATUL AAFIYAH BINTI ABDULLAH", gender: "P", originalClass: "1 URANUS"},
+                {name: "RAZIK ZAKWAN BIN KAZARRUDIN", gender: "L", originalClass: "1 URANUS"},
+                {name: "SHARIFAH SOFIYYAH BINTI SYED ABDULLAH", gender: "P", originalClass: "1 MARIKH"},
+                {name: "SITI SAIDATUN NISA BINTI HABER", gender: "P", originalClass: "1 MARIKH"},
+                {name: "SITTI AMINAH BINTI AZMI", gender: "P", originalClass: "1 MARIKH"},
+                {name: "SYAZWAN SAFWAN BIN SUFFIAN FAIZAL", gender: "L", originalClass: "1 MARIKH"}
+            ],
+            "1 MUSYTARI": [
+                {name: "AATHIF LUQMAN BIN MOHD JIHADI", gender: "L", originalClass: "1 MUSYTARI"},
+                {name: "AIRA AFFIYAH BINTI ABDULLAH", gender: "P", originalClass: "1 MUSYTARI"},
+                {name: "AISYA RAHDANI BINTI JUSTININ", gender: "P", originalClass: "1 MUSYTARI"},
+                {name: "AISYAH HUMAIRA BINTI ABDULLAH", gender: "P", originalClass: "1 MUSYTARI"},
+                {name: "DAANIA SOFEA BINTI DAIZER", gender: "P", originalClass: "1 MUSYTARI"},
+                {name: "FALISHA AFIA BINTI MOHD FAZAL AMIOR", gender: "P", originalClass: "1 MUSYTARI"},
+                {name: "IRDINA SOFIA BINTI JAMLI", gender: "P", originalClass: "1 URANUS"},
+                {name: "IRSA ZAFINAH BINTI ISMUN", gender: "P", originalClass: "1 URANUS"},
+                {name: "LILY AZALEA BINTI IRWAN J", gender: "P", originalClass: "1 MUSYTARI"},
+                {name: "LUQMAN AL HAKIM BIN HARMAN", gender: "L", originalClass: "1 URANUS"},
+                {name: "MAYLEEN DELISHA BINTI MUGABE", gender: "P", originalClass: "1 UTARID"},
+                {name: "MUHAMAD AFFIF ASFFA BIN MOHD UDA", gender: "L", originalClass: "1 MUSYTARI"},
+                {name: "MUHAMMAD ADIB ARYAN BIN AZLIND", gender: "L", originalClass: "1 MUSYTARI"},
+                {name: "MUHAMMAD AISY HARITH BIN MOHD HAZIL", gender: "L", originalClass: "1 MUSYTARI"},
+                {name: "MUHAMMAD ARIF BIN KARIA", gender: "L", originalClass: "1 MUSYTARI"},
+                {name: "MUHAMMAD FARISH BIN MOHD FADZIL", gender: "L", originalClass: "1 MUSYTARI"},
+                {name: "MUHAMMAD HADI BIN ADNAN", gender: "L", originalClass: "1 UTARID"},
+                {name: "MUHAMMAD ILYAS AZRI BIN AZMI", gender: "L", originalClass: "1 MUSYTARI"},
+                {name: "MUHAMMAD NUR FADHLI BIN MATASSIM", gender: "L", originalClass: "1 URANUS"},
+                {name: "MUHAMMAD RAYQQAL ILHAM BIN WILMAN", gender: "L", originalClass: "1 MUSYTARI"},
+                {name: "MUHAMMAD SHAFIE ZULFAQAR BIN SHAMREE", gender: "L", originalClass: "1 MUSYTARI"},
+                {name: "MUHAMMAD SHAHRAYYAN BIN MD ASNIL", gender: "L", originalClass: "1 MUSYTARI"},
+                {name: "MUSSAH ISBUHA QISHA BINTI RUDY", gender: "P", originalClass: "1 MUSYTARI"},
+                {name: "NIMRAH HIDANAH BINTI HAMZAH", gender: "P", originalClass: "1 MUSYTARI"},
+                {name: "NOR ADIRAH BINTI ABDULLAH", gender: "P", originalClass: "1 MUSYTARI"},
+                {name: "NUH AALI BIN MOHD. RODZHUAN FIKRI", gender: "L", originalClass: "1 MUSYTARI"},
+                {name: "NUR ADZAHRA BINTI MOHD ROSLI", gender: "P", originalClass: "1 MUSYTARI"},
+                {name: "NUR AINI BINTI SADRI", gender: "P", originalClass: "1 MUSYTARI"},
+                {name: "NUR QAIERA RAMADANIA BINTI ABDULLAH", gender: "P", originalClass: "1 MUSYTARI"},
+                {name: "NUR SYIFANAZIA IMAN BINTI OMAR", gender: "P", originalClass: "1 MUSYTARI"},
+                {name: "NURMUZDALIFAH BINTI RAJID", gender: "P", originalClass: "1 MUSYTARI"},
+                {name: "QAYLA MEDINA BINTI MOHD SHEQALL", gender: "P", originalClass: "1 MUSYTARI"},
+                {name: "RAFIQ ADAM BIN MOHD RAHMADAN", gender: "L", originalClass: "1 MUSYTARI"},
+                {name: "SHARIFF NUR ILAHAN BIN NORDIN", gender: "L", originalClass: "1 MUSYTARI"},
+                {name: "SHERWINAH BINTI NUR AZRI", gender: "P", originalClass: "1 MUSYTARI"},
+                {name: "SITI NUR HAFIZA BINTI HAFIZI", gender: "P", originalClass: "1 UTARID"},
+                {name: "SYUHADA EDDINI BINTI SAIDAL EDDIE", gender: "P", originalClass: "1 MUSYTARI"}
+            ],
+            "1 NEPTUN": [
+                {name: "AAFIYAH AULIYA BINTI NASTAIEN ASMAWI", gender: "P", originalClass: "1 UTARID"},
+                {name: "AARIZ DANIAL BIN ARGARAD", gender: "L", originalClass: "1 NEPTUN"},
+                {name: "AFIQ SAFRIEZHAL BIN ABDUL MUKMIN", gender: "L", originalClass: "1 NEPTUN"},
+                {name: "AIRINA AUNI BINTI IBRAHIM", gender: "P", originalClass: "1 UTARID"},
+                {name: "AMEEYNA BINTI ABDULLAH", gender: "P", originalClass: "1 UTARID"},
+                {name: "ARYA MIKAYLA BINTI MOHD HAFIDZ", gender: "P", originalClass: "1 UTARID"},
+                {name: "AZIRA BINTI MOHD FAZ", gender: "P", originalClass: "1 NEPTUN"},
+                {name: "ELVENNER ODIEL GARRY", gender: "L", originalClass: "1 NEPTUN"},
+                {name: "ERWINDY DECLAN BIN ER.SHIVERS", gender: "L", originalClass: "1 NEPTUN"},
+                {name: "FELIX BIN SIMON", gender: "L", originalClass: "1 NEPTUN"},
+                {name: "HYZZA SHAYFA BINTI JALLAM", gender: "P", originalClass: "1 NEPTUN"},
+                {name: "JEANELLE SYAZANI BINTI JEFFRYSON", gender: "P", originalClass: "1 NEPTUN"},
+                {name: "MOHAMAD RIAN BIN MOHD JEFFRY", gender: "L", originalClass: "1 URANUS"},
+                {name: "MUHAMMAD AIDIL BIN MOHD NAZRUL", gender: "L", originalClass: "1 UTARID"},
+                {name: "MUHAMMAD AMMAR AFFANDI BIN ABDULLAH", gender: "L", originalClass: "1 NEPTUN"},
+                {name: "MUHAMMAD KAMSYARUDIEN BIN WAHIDIN", gender: "L", originalClass: "1 NEPTUN"},
+                {name: "MUHAMMAD QHAZIEF QABEER BIN EDIH", gender: "L", originalClass: "1 URANUS"},
+                {name: "MUHAMMAD RAFIQUE IKHWAN BIN ZAMALDIN", gender: "L", originalClass: "1 NEPTUN"},
+                {name: "MUHAMMAD SYAFIQ RAYYAN BIN ABDULLAH", gender: "L", originalClass: "1 NEPTUN"},
+                {name: "MUHAMMAD SYAWAL BIN BAKRI", gender: "L", originalClass: "1 UTARID"},
+                {name: "MUHAMMAD ZAFFRYL AFZAN BIN ELRZAM", gender: "L", originalClass: "1 NEPTUN"},
+                {name: "MYESHA AZZAHRA BINTI HANIZAL", gender: "P", originalClass: "1 NEPTUN"},
+                {name: "MYRA EVE JENIUS", gender: "P", originalClass: "1 NEPTUN"},
+                {name: "NAZNEEN BINTI ANUAR", gender: "P", originalClass: "1 NEPTUN"},
+                {name: "NOR DARLENNA ROSE BINTI ASHAHRUL", gender: "P", originalClass: "1 NEPTUN"},
+                {name: "NUR MAH NATASHA BINTI ABDULLAH", gender: "P", originalClass: "1 NEPTUN"},
+                {name: "NUR QISHA ZHAFIRA MUHAMMAD FIRDAUS BINTI ABDULLAH", gender: "P", originalClass: "1 NEPTUN"},
+                {name: "NURFARHANA AISHA BINTI NORSAMRIN", gender: "P", originalClass: "1 NEPTUN"},
+                {name: "NURQALESHA HUMAIRA BINTI MOHAMMAD FAZZLY", gender: "P", originalClass: "1 NEPTUN"},
+                {name: "NURSYADZA BINTI HERMAN", gender: "P", originalClass: "1 UTARID"},
+                {name: "PUTRI NURALYA SOFEA BINTI MOHD HASRUL", gender: "P", originalClass: "1 NEPTUN"},
+                {name: "SALLY JOHANA STEFARY", gender: "P", originalClass: "1 NEPTUN"},
+                {name: "SHAFAIMIN BIN TASMIN", gender: "L", originalClass: "1 UTARID"},
+                {name: "SHAHNOM AZWINA BINTI SADRIANSAH", gender: "P", originalClass: "1 UTARID"},
+                {name: "SIMAR BIN ABDULLAH", gender: "L", originalClass: "1 UTARID"},
+                {name: "YASMEEN HUMAIRA QUE BINTI ABDUL KARIM", gender: "P", originalClass: "1 NEPTUN"}
+            ],
+            "1 UTARID": [
+                {name: "ALFIAN BIN ALJONY", gender: "L", originalClass: "1 ZUHAL"},
+                {name: "AL AZHAR BIN RAZMI", gender: "L", originalClass: "1 MUSYTARI"},
+                {name: "AL SHADDIQ SHAH BIN ILIJALDI", gender: "L", originalClass: "1 ZUHRAH"},
+                {name: "ANIQ QADAFFI BIN IMRAN", gender: "L", originalClass: "1 ZUHAL"},
+                {name: "AQILSYARIF BIN ABRAJAN", gender: "L", originalClass: "1 ZUHRAH"},
+                {name: "AWANG ISRUL BIN AWANG ALI", gender: "L", originalClass: "1 UTARID"},
+                {name: "DAYANG AINA ADAWIYAH BINTI ALFIE", gender: "P", originalClass: "1 ZUHAL"},
+                {name: "HANA FATIHAH BINTI ABDUL JIHAN", gender: "P", originalClass: "1 UTARID"},
+                {name: "HARRAZ MIKHAIL BIN HAMDAN", gender: "L", originalClass: "1 ZUHAL"},
+                {name: "MOHAMMAD AFDAL BIN KIMAR", gender: "L", originalClass: "1 MUSYTARI"},
+                {name: "MOHAMMAD AL IKRAM BIN ABDULLAH", gender: "L", originalClass: "1 ZUHRAH"},
+                {name: "MOHAMMAD ILHAM SYAHFIKRI BIN SAHID HUSSIN", gender: "L", originalClass: "1 UTARID"},
+                {name: "MOHAMMAD SYARIFIN BIN RUDY", gender: "L", originalClass: "1 ZUHAL"},
+                {name: "MUHAMAD ATHIF RAMADHANI BIN ABDULLAH", gender: "L", originalClass: "1 UTARID"},
+                {name: "MUHAMMAD AFEEF HARIS BIN AFFINDEY", gender: "L", originalClass: "1 ZUHAL"},
+                {name: "MUHAMMAD AFFENDI BIN ABDULLAH", gender: "L", originalClass: "1 ZUHAL"},
+                {name: "MUHAMMAD DAYYAN HAMIZAN BIN MOHD SAMMY", gender: "L", originalClass: "1 ZUHAL"},
+                {name: "MUHAMMAD DENNIS IQBAL BIN NURUL NAZRI", gender: "L", originalClass: "1 MUSYTARI"},
+                {name: "MUHAMMAD MUQRI ESHAN BIN NIZAM", gender: "L", originalClass: "1 MUSYTARI"},
+                {name: "MUHAMMAD NADZRUL BIN JENIE", gender: "L", originalClass: "1 ZUHAL"},
+                {name: "MUHAMMAD REZKIRULLAH BIN SAOFIE", gender: "L", originalClass: "1 ZUHRAH"},
+                {name: "MUHAMMAD RIZKY BIN ABDUL WAHAB", gender: "L", originalClass: "1 UTARID"},
+                {name: "MUHAMMAD YUSUF BIN IDIL", gender: "L", originalClass: "1 ZUHRAH"},
+                {name: "MUHAMMAD ZULFITRI BIN ROSMAN", gender: "L", originalClass: "1 UTARID"},
+                {name: "NUR ALYA AQILAH BINTI MOHD NADZRI", gender: "P", originalClass: "1 ZUHAL"},
+                {name: "NUR ARDELLA MIKAYLA BINTI MADHUSIN", gender: "P", originalClass: "1 UTARID"},
+                {name: "NURAZURATIARA BINTI RICH", gender: "P", originalClass: "1 ZUHAL"},
+                {name: "PUTRI BALQISH BINTI ABDULLAH", gender: "P", originalClass: "1 UTARID"},
+                {name: "SITI KAMALIA BINTI ABDULLAH", gender: "P", originalClass: "1 ZUHRAH"},
+                {name: "SUARDI BIN ABDULLAH", gender: "L", originalClass: "1 UTARID"}
+            ],
+            "1 URANUS": [
+                {name: "ABDUL RAYYAN BIN ABDULLAH", gender: "L", originalClass: "1 MARIKH"},
+                {name: "ADI RAFIE BIN ABDULLAH", gender: "L", originalClass: "1 MARIKH"},
+                {name: "AIMAN SHAFIQ BIN ABDULLAH", gender: "L", originalClass: "1 MARIKH"},
+                {name: "AIZREL ARFA HUSYAIRI BIN FAZRIL", gender: "L", originalClass: "1 MARIKH"},
+                {name: "ARAYAN BIN HAMID", gender: "L", originalClass: "1 URANUS"},
+                {name: "DRAKESTER ALFRID", gender: "L", originalClass: "1 NEPTUN"},
+                {name: "FATIMAH KHUMAIRA BINTI ABDULLAH", gender: "P", originalClass: "1 URANUS"},
+                {name: "FIRASH AQEEL SHAH BIN NORADZMI", gender: "L", originalClass: "1 MARIKH"},
+                {name: "IZZATUL NAAZHURAH BINTI KARIM", gender: "P", originalClass: "1 NEPTUN"},
+                {name: "MOHAMAD ILHAM SYAH BIN ABDULLAH", gender: "L", originalClass: "1 NEPTUN"},
+                {name: "MOHAMAD SHAFIQ FAHMI BIN MORE", gender: "L", originalClass: "1 NEPTUN"},
+                {name: "MOHAMMAD ARYAN ISKANDAR BIN ABDULLAH", gender: "L", originalClass: "1 NEPTUN"},
+                {name: "MOHAMMAD ARYAN SHAHAFIDZ BIN ABDULLAH", gender: "L", originalClass: "1 URANUS"},
+                {name: "MUHAMAD SHARILNIEZAM BIN AG SHARIEZAN", gender: "L", originalClass: "1 MARIKH"},
+                {name: "MUHAMMAD ADZRIEN AZRIEL", gender: "L", originalClass: "1 URANUS"},
+                {name: "MUHAMMAD AMIR QASYAH BIN ABDULLAH", gender: "L", originalClass: "1 URANUS"},
+                {name: "MUHAMMAD HARITH FIRDAUS BIN MOHD ELFIE", gender: "L", originalClass: "1 NEPTUN"},
+                {name: "MUHAMMAD HARRAZ NAUFAL BIN SHARIFF", gender: "L", originalClass: "1 MUSYTARI"},
+                {name: "MUHAMMAD HIJAZI BIN NORALI", gender: "L", originalClass: "1 MARIKH"},
+                {name: "MUHAMMAD JUKAIRI BIN BASRI", gender: "L", originalClass: "1 URANUS"},
+                {name: "MUHAMMAD MIKAIL BIN ABDULLAH", gender: "L", originalClass: "1 MARIKH"},
+                {name: "NUR NAAILA QAIREEN BINTI ABDULLAH", gender: "P", originalClass: "1 URANUS"},
+                {name: "NUR RAZIYA BINTI SATTAR", gender: "P", originalClass: "1 NEPTUN"},
+                {name: "NUR UFAIRAH BINTI RASMIN", gender: "P", originalClass: "1 MARIKH"},
+                {name: "NURUL ARIANNA BINTI ABDULLAH", gender: "P", originalClass: "1 MARIKH"},
+                {name: "PUTRI ALISHA BINTI INDARA", gender: "P", originalClass: "1 MARIKH"},
+                {name: "SHAZWAN SAHADAIN BIN DARWIN", gender: "L", originalClass: "1 URANUS"},
+                {name: "SULAIMAN BIN JUSLIN", gender: "L", originalClass: "1 URANUS"},
+                {name: "WOELD CHRISTEN SITING", gender: "L", originalClass: "1 NEPTUN"},
+                {name: "XANDER DAMIAN ANDY", gender: "L", originalClass: "1 NEPTUN"},
+                {name: "YEHEZKIEL JOENICO", gender: "L", originalClass: "1 NEPTUN"}
+            ],
+            "1 ZUHAL": [
+                {name: "AADAM ZAFRAN BIN ALI SUKAIMI", gender: "L", originalClass: "1 ZUHAL"},
+                {name: "AARA AURORA BINTI MOHD SHAH SHARIR", gender: "P", originalClass: "1 ZUHAL"},
+                {name: "AHMAD YUSUF BIN ANDY PAUL", gender: "L", originalClass: "1 UTARID"},
+                {name: "ALEYASARAH SOFEA BINTI ROSLIE", gender: "P", originalClass: "1 ZUHAL"},
+                {name: "AMIRA AZZAHRA BINTI AKWAN", gender: "P", originalClass: "1 ZUHAL"},
+                {name: "AURORA AUNI BINTI ROSLIZAN", gender: "P", originalClass: "1 ZUHAL"},
+                {name: "DELISHA BINTI KHAIRUL", gender: "P", originalClass: "1 ZUHAL"},
+                {name: "EDRIAN ROSS BIN EDWARD", gender: "L", originalClass: "1 UTARID"},
+                {name: "EZZ ARIANA DURRANI BINTI EZRIE FADLI", gender: "P", originalClass: "1 ZUHAL"},
+                {name: "FIZSYURA ZAYRA BINTI AZIMFAIZ", gender: "P", originalClass: "1 UTARID"},
+                {name: "HAZIQ FIRAS BIN MUHAMMAD JUL", gender: "L", originalClass: "1 ZUHAL"},
+                {name: "MOHAMMAD NIJMAN HASBI BIN MARSAD", gender: "L", originalClass: "1 ZUHAL"},
+                {name: "MUHAMMAD ADRIAN BIN SULAIMAN", gender: "L", originalClass: "1 ZUHAL"},
+                {name: "MUHAMMAD ARDIANSYAH BIN JOHARI", gender: "L", originalClass: "1 ZUHAL"},
+                {name: "MUHAMMAD AYDEEN ALFATIH BIN RENEY", gender: "L", originalClass: "1 ZUHAL"},
+                {name: "MUHAMMAD AZWAR BIN ISMAIL", gender: "L", originalClass: "1 UTARID"},
+                {name: "MUHAMMAD RAZIQ RAYQAL BIN ABDUL RAJAK", gender: "L", originalClass: "1 ZUHAL"},
+                {name: "MUHAMMAD SYAFIQ HAMIZAN BIN SABRI", gender: "L", originalClass: "1 URANUS"},
+                {name: "MUHAMMAD SYAKIR ISYRAF BIN SUPARMAN", gender: "L", originalClass: "1 ZUHAL"},
+                {name: "MUHAMMAD SYAZWI ZAKWAN BIN MATSAH", gender: "L", originalClass: "1 URANUS"},
+                {name: "MUHAMMAD ZILL QAYYIM BIN MOHD. NAZRIE", gender: "L", originalClass: "1 ZUHAL"},
+                {name: "NABHAN MUSTAQIM BIN RIDZKAN", gender: "L", originalClass: "1 ZUHAL"},
+                {name: "NUR ADRIANA BINTI ABDULLAH", gender: "P", originalClass: "1 ZUHAL"},
+                {name: "NUR AIRIS RANIA BINTI MOHD AFFENDY", gender: "P", originalClass: "1 URANUS"},
+                {name: "NUR AISYA SOFEA BINTI ABDULLAH", gender: "P", originalClass: "1 URANUS"},
+                {name: "NUR AYRA AAFIYAH BINTI REDSMAR", gender: "P", originalClass: "1 UTARID"},
+                {name: "NUR ELIYA MEDINA BINTI MOHAMAD NOR", gender: "P", originalClass: "1 ZUHAL"},
+                {name: "NUR FATIHAH ADHA BINTI JOY", gender: "P", originalClass: "1 URANUS"},
+                {name: "NUR HUMAIRAH BINTI AL NAJIB", gender: "P", originalClass: "1 ZUHAL"},
+                {name: "NUR MARYAM BINTI NASIL", gender: "P", originalClass: "1 ZUHAL"},
+                {name: "NUR NAZNEEN FAIHA BINTI ROSDI", gender: "P", originalClass: "1 UTARID"},
+                {name: "NUR ROAIDAH BINTI ABDEL NASH", gender: "P", originalClass: "1 UTARID"},
+                {name: "NUR SYIFA ANNUR BINTI MOHD FIRDAUS", gender: "P", originalClass: "1 ZUHAL"},
+                {name: "PUTRI NOR AISYAH BINTI JEHAR", gender: "P", originalClass: "1 ZUHAL"},
+                {name: "SITI MARYAM BINTI MOHD ZAINI", gender: "P", originalClass: "1 ZUHAL"},
+                {name: "ZINNIEYRA UMAIRAH BINTI ABDUL HAFIDZ", gender: "P", originalClass: "1 UTARID"},
+                {name: "AIMAN BIN ABDULLAH", gender: "L", originalClass: "1 ZUHAL"}
+            ],
+            "1 ZUHRAH": [
+                {name: "AINUL MARDHIAH BINTI JASNI", gender: "P", originalClass: "1 ZUHRAH"},
+                {name: "ALEEF ZAFREL BIN ALI SUKAIMI", gender: "L", originalClass: "1 ZUHRAH"},
+                {name: "DAYANG MIQAILA BINTI MD QAYYUM HAZIQ", gender: "P", originalClass: "1 ZUHRAH"},
+                {name: "FILZAH ALEESYA BINTI FAISAL", gender: "P", originalClass: "1 ZUHRAH"},
+                {name: "KHALISA NAZWA BINTI AZWANIRWAN", gender: "P", originalClass: "1 ZUHRAH"},
+                {name: "MOHAMAD AIRIEL ISKANDAR BIN MOHD ROSIDI", gender: "L", originalClass: "1 ZUHRAH"},
+                {name: "MOHAMAD KHAIRULNAZMI BIN AZAHAR", gender: "L", originalClass: "1 UTARID"},
+                {name: "MUHAMMAD ADDEM MIQAEL BIN ABDULLAH", gender: "L", originalClass: "1 ZUHRAH"},
+                {name: "MUHAMMAD ALZAM JAZLAN BIN JOSLY", gender: "L", originalClass: "1 UTARID"},
+                {name: "MUHAMMAD AQEEF IQMAL BIN MOHD HAFIQ", gender: "L", originalClass: "1 ZUHRAH"},
+                {name: "MUHAMMAD AYDAN FATEH BIN MUHAMMAD HAIDI", gender: "L", originalClass: "1 ZUHRAH"},
+                {name: "MUHAMMAD FAIQ DHAFFA BIN RAMLI", gender: "L", originalClass: "1 ZUHRAH"},
+                {name: "MUHAMMAD FAYYADH ANAQI BIN MOHAMMAD NAZREEN", gender: "L", originalClass: "1 ZUHRAH"},
+                {name: "MUHAMMAD HARZAN HAMQA BIN AFFENDY", gender: "L", originalClass: "1 ZUHRAH"},
+                {name: "MUHAMMAD HUD BIN ABDUL RHIDZWAN", gender: "L", originalClass: "1 ZUHRAH"},
+                {name: "MUHAMMAD IZHARSYAH BIN AZHAR", gender: "L", originalClass: "1 ZUHRAH"},
+                {name: "MUHAMMAD NURAZHAR BIN ABDULLAH", gender: "L", originalClass: "1 ZUHRAH"},
+                {name: "NORFAZILAH BINTI HAMIDUN", gender: "P", originalClass: "1 ZUHRAH"},
+                {name: "NOR SHAHFIKAH BINTI GAJIL", gender: "P", originalClass: "1 URANUS"},
+                {name: "NUHA DELISHA BINTI MOHD AZAM", gender: "P", originalClass: "1 URANUS"},
+                {name: "NUR ADRIANA SHIFFA BINTI MUHD JAWAD", gender: "P", originalClass: "1 ZUHRAH"},
+                {name: "NUR AFIQAH NABILAH BINTI M BAKRI", gender: "P", originalClass: "1 URANUS"},
+                {name: "NUR ALMIRA RAISYA BINTI KALIFAH", gender: "P", originalClass: "1 ZUHRAH"},
+                {name: "NUR AURANI MEDINA BINTI MOHAMMAD SHAFWAN", gender: "P", originalClass: "1 ZUHRAH"},
+                {name: "NUR FATIMAH NATRA BINTI BALIH", gender: "P", originalClass: "1 ZUHRAH"},
+                {name: "NUR FATINAH BINTI AHMAD KASEH", gender: "P", originalClass: "1 ZUHRAH"},
+                {name: "NUR HAZIQAH RAFANDA BINTI MOHD HAZLAN", gender: "P", originalClass: "1 ZUHRAH"},
+                {name: "NUR MEDINAH SOFEA BINTI IRWAN SETIAWAN", gender: "P", originalClass: "1 ZUHRAH"},
+                {name: "NUR NAYRA AMEERA BT. MUHAMMAD SANUSI", gender: "P", originalClass: "1 URANUS"},
+                {name: "NUR SYAFIYAH BINTI AWEDA", gender: "P", originalClass: "1 ZUHRAH"},
+                {name: "NURHANINA SHUHAILA BINTI JELI", gender: "P", originalClass: "1 ZUHRAH"},
+                {name: "RAIYSHA NABEELA BINTI ROZALI", gender: "P", originalClass: "1 ZUHRAH"},
+                {name: "RAQIB BIN JAMAL", gender: "L", originalClass: "1 ZUHRAH"},
+                {name: "SARIFAH SHAMARA BINTI ABDULLAH", gender: "P", originalClass: "1 ZUHRAH"},
+                {name: "ZAHIDA QALBI NADHIFA BINTI NASRI", gender: "P", originalClass: "1 ZUHRAH"}
+            ]
+        };
+
+        // Default teacher list
+        const defaultTeachers = [
+            "ALIMAN B MASDI", "ASHRUL BIN ASHKAR", "CATHERINE JOHN", "DAYANG RUGAYAH BT MD ISMAIL",
+            "DIONYSIA BINTI WENCIS", "FARAH AMIRA BINTI IMRAN", "JAINAH BINTI JEMAN", "JUITAH SAID",
+            "JULIZA BINTI NING", "JUMIATI BINTI YASSIN", "LATIFAH BTE ZAKARIA", "LIAHNIEH LUMPISAU",
+            "MASTINAH BINTI MOHD DIN", "MOHAMAD RAFFIZAN BIN MATJHILIN", "MOHD FAHMI BIN MAT TAIB",
+            "MOHD RAFHAN BIN NAZRI", "MOHD SHARIL BIN HJ BAHARUDDIN", "MOHD ZAIDI BIN WADIN",
+            "NAHAR BIN HJ.JELI", "NANCY JEFFRINE IDANG", "NISMAWATY BINTI RUSDI",
+            "NORAZIZAH BT AHMAD ZAWAWI", "NORZURAIRAH MOHD RUDZUAN", "NUR ATIKAH BINTI NOOR ARIFIN",
+            "NUR ZEHAN BINTI SUHAIMI", "NURHAYATI BINTI IBRAHIM", "NURSYAMIMI BINTI IBRAHIM",
+            "NURUL ASIKIN BINTI MOHAMAD", "RAILIS BINTI MALANTIN", "RASHIQAH MARDHIYYAH BINTI JASRI",
+            "ROZIAH BINTI KOPONG @ LOUIS", "SAIRANA BINTI TAHIR", "SARIMAH BINTI DORING",
+            "SETIA BINTI ABDUL MANAN", "SHARIFAH SUHAILA BINTI ISHAK", "SITTI NAZIFAH BINTI HATIMUL-AHSOM",
+            "SRI DEWI BINTI ESTHAUFIK MOHD", "ZAITON ABD HAMID", "ZUNALDAH @ ZUNAIDAH BINTI AWANG DAMIT",
+            "ADMINISTRATOR"
+        ];
+
+        // Storage for attendance records, new students, and new teachers
+        let attendanceRecords = JSON.parse(localStorage.getItem('attendanceRecords')) || [];
+        let newStudents = JSON.parse(localStorage.getItem('newStudents')) || [];
+        let newTeachers = JSON.parse(localStorage.getItem('newTeachers')) || [];
+        let currentTeacher = '';
+
+        // Function to get combined teacher data (default + new teachers)
+        function getCombinedTeachersData() {
+            const combined = [...defaultTeachers];
+            newTeachers.forEach(teacher => {
+                if (!combined.includes(teacher.name)) {
+                    combined.push(teacher.name);
+                }
+            });
+            return combined.sort();
+        }
+
+        // Function to get combined student data (original + new students)
+        function getCombinedStudentsData() {
+            const combined = JSON.parse(JSON.stringify(studentsData)); // Deep copy
+            
+            newStudents.forEach(newStudent => {
+                if (!combined[newStudent.pitClass]) {
+                    combined[newStudent.pitClass] = [];
+                }
+                combined[newStudent.pitClass].push(newStudent);
+            });
+            
+            return combined;
+        }
+
+
+
+        function proceedToMenu() {
+            const teacher = document.getElementById('teacherSelect').value;
+            if (!teacher) {
+                alert('Sila pilih nama guru terlebih dahulu.');
+                return;
+            }
+            currentTeacher = teacher;
+            document.getElementById('selectedTeacher').textContent = teacher;
+            document.getElementById('page1').classList.add('hidden');
+            document.getElementById('page2').classList.remove('hidden');
+        }
+
+        function showMenu() {
+            document.getElementById('page3').classList.add('hidden');
+            document.getElementById('page4').classList.add('hidden');
+            document.getElementById('page5').classList.add('hidden');
+            document.getElementById('page2').classList.remove('hidden');
+            updateTodaySubmissions();
+        }
+
+        function showAttendanceForm() {
+            document.getElementById('page2').classList.add('hidden');
+            document.getElementById('page3').classList.remove('hidden');
+        }
+
+        function showDailyRecord() {
+            document.getElementById('page2').classList.add('hidden');
+            document.getElementById('page4').classList.remove('hidden');
+        }
+
+        function showDataManagement() {
+            document.getElementById('page2').classList.add('hidden');
+            document.getElementById('page5').classList.remove('hidden');
+            
+            // Auto-fill teacher and date
+            document.getElementById('addingTeacher').textContent = currentTeacher;
+            document.getElementById('addingDate').textContent = new Date().toLocaleDateString('ms-MY');
+            document.getElementById('addingTeacherBy').textContent = currentTeacher;
+            document.getElementById('addingTeacherDate').textContent = new Date().toLocaleDateString('ms-MY');
+            
+            // Show default tab (Add Student)
+            showDataTab('addStudent');
+            
+            updateRecentlyAddedStudents();
+            updateRecentlyAddedTeachers();
+        }
+
+        function showDataTab(tabName) {
+            // Hide all tab contents
+            document.getElementById('addStudentContent').classList.add('hidden');
+            document.getElementById('addTeacherContent').classList.add('hidden');
+            document.getElementById('editStudentContent').classList.add('hidden');
+            
+            // Reset all tab buttons
+            document.getElementById('addStudentTab').className = 'px-6 py-3 font-medium text-gray-500 hover:text-gray-700';
+            document.getElementById('addTeacherTab').className = 'px-6 py-3 font-medium text-gray-500 hover:text-gray-700';
+            document.getElementById('editStudentTab').className = 'px-6 py-3 font-medium text-gray-500 hover:text-gray-700';
+            
+            // Show selected tab content and activate button
+            if (tabName === 'addStudent') {
+                document.getElementById('addStudentContent').classList.remove('hidden');
+                document.getElementById('addStudentTab').className = 'px-6 py-3 font-medium text-blue-600 border-b-2 border-blue-600';
+            } else if (tabName === 'addTeacher') {
+                document.getElementById('addTeacherContent').classList.remove('hidden');
+                document.getElementById('addTeacherTab').className = 'px-6 py-3 font-medium text-blue-600 border-b-2 border-blue-600';
+            } else if (tabName === 'editStudent') {
+                document.getElementById('editStudentContent').classList.remove('hidden');
+                document.getElementById('editStudentTab').className = 'px-6 py-3 font-medium text-blue-600 border-b-2 border-blue-600';
+                searchStudents(); // Load students when tab is shown
+            }
+        }
+
+        function searchStudents() {
+            const searchTerm = document.getElementById('searchStudent').value.toLowerCase();
+            const filterClass = document.getElementById('filterClass').value;
+            const combinedData = getCombinedStudentsData();
+            const resultsContainer = document.getElementById('studentSearchResults');
+            
+            let allStudents = [];
+            
+            // Collect all students from all classes
+            Object.keys(combinedData).forEach(pitClass => {
+                combinedData[pitClass].forEach(student => {
+                    allStudents.push({
+                        ...student,
+                        pitClass: pitClass
+                    });
+                });
+            });
+            
+            // Filter students
+            let filteredStudents = allStudents.filter(student => {
+                const matchesSearch = student.name.toLowerCase().includes(searchTerm);
+                const matchesClass = !filterClass || student.pitClass === filterClass;
+                return matchesSearch && matchesClass;
+            });
+            
+            // Sort alphabetically
+            filteredStudents.sort((a, b) => a.name.localeCompare(b.name, 'ms', { sensitivity: 'base' }));
+            
+            if (filteredStudents.length === 0) {
+                resultsContainer.innerHTML = '<p class="text-gray-500 text-center py-8">Tiada murid dijumpai</p>';
+                return;
+            }
+            
+            resultsContainer.innerHTML = filteredStudents.map(student => `
+                <div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-800">${student.name}</h4>
+                            <div class="text-sm text-gray-600 mt-1">
+                                <span class="inline-block mr-4">
+                                    <strong>Jantina:</strong> ${student.gender === 'L' ? 'Lelaki' : 'Perempuan'}
+                                </span>
+                                <span class="inline-block mr-4">
+                                    <strong>Kelas PIT:</strong> ${student.pitClass}
+                                </span>
+                                <span class="inline-block">
+                                    <strong>Kelas Asal:</strong> ${student.originalClass}
+                                </span>
+                            </div>
+                            ${student.isNewStudent ? '<span class="inline-block mt-2 text-xs bg-green-600 text-white px-2 py-1 rounded">MURID BARU</span>' : ''}
+                        </div>
+                        <button onclick="editStudent('${student.name}', '${student.pitClass}')" 
+                                class="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg transition duration-200">
+                            Edit
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editStudent(studentName, pitClass) {
+            const combinedData = getCombinedStudentsData();
+            const student = combinedData[pitClass]?.find(s => s.name === studentName);
+            
+            if (!student) {
+                alert('Murid tidak dijumpai.');
+                return;
+            }
+            
+            // Fill the edit form
+            document.getElementById('editStudentId').value = `${studentName}|${pitClass}`;
+            document.getElementById('editStudentName').value = student.name;
+            document.getElementById('editStudentGender').value = student.gender === 'L' ? 'Lelaki' : 'Perempuan';
+            document.getElementById('editStudentPitClass').value = pitClass;
+            document.getElementById('editStudentOriginalClass').value = student.originalClass;
+            
+            // Show modal
+            document.getElementById('editStudentModal').classList.remove('hidden');
+        }
+
+        function closeEditStudentModal() {
+            document.getElementById('editStudentModal').classList.add('hidden');
+        }
+
+        function saveStudentEdit() {
+            const studentId = document.getElementById('editStudentId').value;
+            const [originalName, originalPitClass] = studentId.split('|');
+            const newPitClass = document.getElementById('editStudentPitClass').value;
+            const newOriginalClass = document.getElementById('editStudentOriginalClass').value;
+            
+            if (!newPitClass || !newOriginalClass) {
+                alert('Sila lengkapkan semua maklumat.');
+                return;
+            }
+            
+            if (!confirm('Adakah anda pasti ingin menyimpan perubahan ini?')) {
+                return;
+            }
+            
+            // Find and update the student
+            const combinedData = getCombinedStudentsData();
+            let studentFound = false;
+            
+            // Check if it's a new student
+            const newStudentIndex = newStudents.findIndex(s => 
+                s.name === originalName && s.pitClass === originalPitClass
+            );
+            
+            if (newStudentIndex !== -1) {
+                // Update new student
+                newStudents[newStudentIndex].pitClass = newPitClass;
+                newStudents[newStudentIndex].originalClass = newOriginalClass;
+                newStudents[newStudentIndex].lastModified = new Date().toISOString();
+                newStudents[newStudentIndex].modifiedBy = currentTeacher;
+                localStorage.setItem('newStudents', JSON.stringify(newStudents));
+                studentFound = true;
+            } else {
+                // It's an original student, need to create a modification record
+                const originalStudent = combinedData[originalPitClass]?.find(s => s.name === originalName);
+                if (originalStudent) {
+                    // Remove from original location if PIT class changed
+                    if (originalPitClass !== newPitClass) {
+                        // Add to new students list with updated info
+                        const modifiedStudent = {
+                            name: originalStudent.name,
+                            gender: originalStudent.gender,
+                            pitClass: newPitClass,
+                            originalClass: newOriginalClass,
+                            addedBy: currentTeacher,
+                            addedDate: new Date().toISOString(),
+                            isNewStudent: false,
+                            isModified: true,
+                            originalPitClass: originalPitClass
+                        };
+                        newStudents.push(modifiedStudent);
+                        localStorage.setItem('newStudents', JSON.stringify(newStudents));
+                    }
+                    studentFound = true;
+                }
+            }
+            
+            if (studentFound) {
+                alert('Maklumat murid berjaya dikemaskini!');
+                closeEditStudentModal();
+                searchStudents(); // Refresh the search results
+            } else {
+                alert('Ralat: Murid tidak dijumpai.');
+            }
+        }
+
+        function previewNewStudent() {
+            const name = document.getElementById('newStudentName').value.trim();
+            const gender = document.getElementById('newStudentGender').value;
+            const pitClass = document.getElementById('newStudentPitClass').value;
+            const originalClass = document.getElementById('newStudentOriginalClass').value;
+
+            if (!name || !gender || !pitClass || !originalClass) {
+                alert('Sila lengkapkan semua maklumat murid.');
+                return;
+            }
+
+            // Check if student already exists
+            const combinedData = getCombinedStudentsData();
+            const existingStudent = combinedData[pitClass]?.find(s => 
+                s.name.toLowerCase() === name.toLowerCase()
+            );
+
+            if (existingStudent) {
+                alert('Murid dengan nama ini sudah wujud dalam kelas PIT yang sama.');
+                return;
+            }
+
+            const previewContent = document.getElementById('newStudentPreviewContent');
+            previewContent.innerHTML = `
+                <div class="space-y-3">
+                    <div class="bg-gray-50 p-3 rounded">
+                        <p><strong>Nama Murid:</strong> ${name}</p>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded">
+                        <p><strong>Jantina:</strong> ${gender === 'L' ? 'Lelaki' : 'Perempuan'}</p>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded">
+                        <p><strong>Kelas PIT:</strong> ${pitClass}</p>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded">
+                        <p><strong>Kelas Asal:</strong> ${originalClass}</p>
+                    </div>
+                    <div class="bg-blue-50 p-3 rounded">
+                        <p><strong>Ditambah oleh:</strong> ${currentTeacher}</p>
+                        <p><strong>Tarikh:</strong> ${new Date().toLocaleDateString('ms-MY')}</p>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('newStudentPreviewModal').classList.remove('hidden');
+        }
+
+        function closeNewStudentPreview() {
+            document.getElementById('newStudentPreviewModal').classList.add('hidden');
+        }
+
+        function confirmAddStudent() {
+            const name = document.getElementById('newStudentName').value.trim();
+            const gender = document.getElementById('newStudentGender').value;
+            const pitClass = document.getElementById('newStudentPitClass').value;
+            const originalClass = document.getElementById('newStudentOriginalClass').value;
+
+            const newStudent = {
+                name: name,
+                gender: gender,
+                pitClass: pitClass,
+                originalClass: originalClass,
+                addedBy: currentTeacher,
+                addedDate: new Date().toISOString(),
+                isNewStudent: true
+            };
+
+            newStudents.push(newStudent);
+            localStorage.setItem('newStudents', JSON.stringify(newStudents));
+
+            alert('Murid baru berjaya ditambah!');
+            closeNewStudentPreview();
+            clearAddStudentForm();
+            updateRecentlyAddedStudents();
+        }
+
+        function clearAddStudentForm() {
+            document.getElementById('newStudentName').value = '';
+            document.getElementById('newStudentGender').value = '';
+            document.getElementById('newStudentPitClass').value = '';
+            document.getElementById('newStudentOriginalClass').value = '';
+        }
+
+        function updateRecentlyAddedStudents() {
+            const container = document.getElementById('recentlyAddedStudents');
+            
+            if (newStudents.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center">Belum ada murid baru ditambah</p>';
+                return;
+            }
+
+            // Sort by most recent first
+            const sortedStudents = [...newStudents].sort((a, b) => 
+                new Date(b.addedDate) - new Date(a.addedDate)
+            );
+
+            container.innerHTML = `
+                <div class="space-y-3">
+                    ${sortedStudents.slice(0, 10).map(student => `
+                        <div class="bg-green-50 border border-green-200 p-4 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-semibold text-green-800">${student.name}</h4>
+                                    <p class="text-sm text-green-700">
+                                        ${student.gender === 'L' ? 'Lelaki' : 'Perempuan'} • 
+                                        PIT: ${student.pitClass} • 
+                                        Asal: ${student.originalClass}
+                                    </p>
+                                    <p class="text-xs text-green-600 mt-1">
+                                        Ditambah oleh ${student.addedBy} pada ${new Date(student.addedDate).toLocaleDateString('ms-MY')}
+                                    </p>
+                                </div>
+                                <button onclick="removeNewStudent('${student.name}', '${student.pitClass}')" 
+                                        class="text-red-600 hover:text-red-800 text-sm">
+                                    Padam
+                                </button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                ${newStudents.length > 10 ? `
+                    <p class="text-sm text-gray-500 text-center mt-4">
+                        Menunjukkan 10 murid terbaru daripada ${newStudents.length} jumlah murid baru
+                    </p>
+                ` : ''}
+            `;
+        }
+
+        function removeNewStudent(studentName, pitClass) {
+            if (confirm(`Adakah anda pasti ingin memadamkan ${studentName} dari senarai?`)) {
+                newStudents = newStudents.filter(s => 
+                    !(s.name === studentName && s.pitClass === pitClass)
+                );
+                localStorage.setItem('newStudents', JSON.stringify(newStudents));
+                updateRecentlyAddedStudents();
+                alert('Murid berjaya dipadamkan.');
+            }
+        }
+
+        function previewNewTeacher() {
+            const name = document.getElementById('newTeacherName').value.trim().toUpperCase();
+
+            if (!name) {
+                alert('Sila masukkan nama guru.');
+                return;
+            }
+
+            // Check if teacher already exists
+            const combinedTeachers = getCombinedTeachersData();
+            if (combinedTeachers.includes(name)) {
+                alert('Nama guru ini sudah wujud dalam senarai.');
+                return;
+            }
+
+            const previewContent = document.getElementById('newTeacherPreviewContent');
+            previewContent.innerHTML = `
+                <div class="space-y-3">
+                    <div class="bg-gray-50 p-3 rounded">
+                        <p><strong>Nama Guru:</strong> ${name}</p>
+                    </div>
+                    <div class="bg-blue-50 p-3 rounded">
+                        <p><strong>Ditambah oleh:</strong> ${currentTeacher}</p>
+                        <p><strong>Tarikh:</strong> ${new Date().toLocaleDateString('ms-MY')}</p>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('newTeacherPreviewModal').classList.remove('hidden');
+        }
+
+        function closeNewTeacherPreview() {
+            document.getElementById('newTeacherPreviewModal').classList.add('hidden');
+        }
+
+        function confirmAddTeacher() {
+            const name = document.getElementById('newTeacherName').value.trim().toUpperCase();
+
+            const newTeacher = {
+                name: name,
+                addedBy: currentTeacher,
+                addedDate: new Date().toISOString()
+            };
+
+            newTeachers.push(newTeacher);
+            localStorage.setItem('newTeachers', JSON.stringify(newTeachers));
+
+            alert('Nama guru baru berjaya ditambah!');
+            closeNewTeacherPreview();
+            clearAddTeacherForm();
+            updateRecentlyAddedTeachers();
+            updateTeacherDropdown();
+        }
+
+        function clearAddTeacherForm() {
+            document.getElementById('newTeacherName').value = '';
+        }
+
+        function updateRecentlyAddedTeachers() {
+            const container = document.getElementById('recentlyAddedTeachers');
+            
+            if (newTeachers.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center">Belum ada guru baru ditambah</p>';
+                return;
+            }
+
+            // Sort by most recent first
+            const sortedTeachers = [...newTeachers].sort((a, b) => 
+                new Date(b.addedDate) - new Date(a.addedDate)
+            );
+
+            container.innerHTML = `
+                <div class="space-y-3">
+                    ${sortedTeachers.slice(0, 10).map(teacher => `
+                        <div class="bg-green-50 border border-green-200 p-4 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-semibold text-green-800">${teacher.name}</h4>
+                                    <p class="text-xs text-green-600 mt-1">
+                                        Ditambah oleh ${teacher.addedBy} pada ${new Date(teacher.addedDate).toLocaleDateString('ms-MY')}
+                                    </p>
+                                </div>
+                                <button onclick="removeNewTeacher('${teacher.name}')" 
+                                        class="text-red-600 hover:text-red-800 text-sm">
+                                    Padam
+                                </button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                ${newTeachers.length > 10 ? `
+                    <p class="text-sm text-gray-500 text-center mt-4">
+                        Menunjukkan 10 guru terbaru daripada ${newTeachers.length} jumlah guru baru
+                    </p>
+                ` : ''}
+            `;
+        }
+
+        function removeNewTeacher(teacherName) {
+            if (confirm(`Adakah anda pasti ingin memadamkan ${teacherName} dari senarai?`)) {
+                newTeachers = newTeachers.filter(t => t.name !== teacherName);
+                localStorage.setItem('newTeachers', JSON.stringify(newTeachers));
+                updateRecentlyAddedTeachers();
+                updateTeacherDropdown();
+                alert('Guru berjaya dipadamkan.');
+            }
+        }
+
+        function updateTeacherDropdown() {
+            const teacherSelect = document.getElementById('teacherSelect');
+            const combinedTeachers = getCombinedTeachersData();
+            
+            teacherSelect.innerHTML = '<option value="">-- Pilih Nama Anda --</option>';
+            combinedTeachers.forEach(teacher => {
+                const option = document.createElement('option');
+                option.value = teacher;
+                option.textContent = teacher;
+                teacherSelect.appendChild(option);
+            });
+        }
+
+        function loadStudents() {
+            const pitClass = document.getElementById('pitClass').value;
+            const studentsContainer = document.getElementById('studentsContainer');
+            const studentsList = document.getElementById('studentsList');
+
+            if (!pitClass) {
+                studentsList.classList.add('hidden');
+                return;
+            }
+
+            const combinedData = getCombinedStudentsData();
+            let students = combinedData[pitClass] || [];
+            
+            // Sort students alphabetically by name (A-Z)
+            students = students.sort((a, b) => a.name.localeCompare(b.name, 'ms', { sensitivity: 'base' }));
+            
+            studentsContainer.innerHTML = '';
+
+            students.forEach((student, index) => {
+                const studentDiv = document.createElement('div');
+                const bgColor = student.isNewStudent ? 'bg-green-50 border border-green-200' : 'bg-gray-50';
+                studentDiv.className = `flex items-center justify-between p-3 ${bgColor} rounded-lg slide-in`;
+                studentDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <input type="checkbox" id="student_${index}" class="mr-3 h-4 w-4 text-blue-600 rounded">
+                        <label for="student_${index}" class="font-medium text-gray-800">${student.name}</label>
+                        <span class="ml-2 text-sm text-gray-500">(${student.gender}) - Asal: ${student.originalClass}</span>
+                        ${student.isNewStudent ? '<span class="ml-2 text-xs bg-green-600 text-white px-2 py-1 rounded">BARU</span>' : ''}
+                    </div>
+                `;
+                studentsContainer.appendChild(studentDiv);
+            });
+
+            studentsList.classList.remove('hidden');
+        }
+
+        function selectAll() {
+            const checkboxes = document.querySelectorAll('#studentsContainer input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.checked = true);
+        }
+
+        function clearAll() {
+            const checkboxes = document.querySelectorAll('#studentsContainer input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.checked = false);
+        }
+
+        function previewAttendance() {
+            const date = document.getElementById('attendanceDate').value;
+            const day = document.getElementById('attendanceDay').value;
+            const pitClass = document.getElementById('pitClass').value;
+
+            if (!date || !day || !pitClass) {
+                alert('Sila lengkapkan semua maklumat terlebih dahulu.');
+                return;
+            }
+
+            const combinedData = getCombinedStudentsData();
+            let students = combinedData[pitClass] || [];
+            
+            // Sort students alphabetically by name (A-Z) - same as in loadStudents
+            students = students.sort((a, b) => a.name.localeCompare(b.name, 'ms', { sensitivity: 'base' }));
+            
+            const checkboxes = document.querySelectorAll('#studentsContainer input[type="checkbox"]');
+            const presentStudents = [];
+            const absentStudents = [];
+
+            students.forEach((student, index) => {
+                if (checkboxes[index].checked) {
+                    presentStudents.push(student);
+                } else {
+                    absentStudents.push(student);
+                }
+            });
+
+            const previewContent = document.getElementById('previewContent');
+            previewContent.innerHTML = `
+                <div class="mb-4">
+                    <p><strong>Tarikh:</strong> ${date}</p>
+                    <p><strong>Hari:</strong> ${day}</p>
+                    <p><strong>Kelas PIT:</strong> ${pitClass}</p>
+                    <p><strong>Guru:</strong> ${currentTeacher}</p>
+                </div>
+                <div class="mb-4">
+                    <h4 class="font-semibold text-green-600 mb-2">Hadir (${presentStudents.length}):</h4>
+                    ${presentStudents.map(s => `<p class="text-sm">• ${s.name}</p>`).join('')}
+                </div>
+                <div>
+                    <h4 class="font-semibold text-red-600 mb-2">Tidak Hadir (${absentStudents.length}):</h4>
+                    ${absentStudents.map(s => `<p class="text-sm">• ${s.name}</p>`).join('')}
+                </div>
+            `;
+
+            document.getElementById('previewModal').classList.remove('hidden');
+        }
+
+        function closePreview() {
+            document.getElementById('previewModal').classList.add('hidden');
+        }
+
+        function submitAttendance() {
+            const date = document.getElementById('attendanceDate').value;
+            const day = document.getElementById('attendanceDay').value;
+            const pitClass = document.getElementById('pitClass').value;
+            const combinedData = getCombinedStudentsData();
+            const students = combinedData[pitClass] || [];
+            const checkboxes = document.querySelectorAll('#studentsContainer input[type="checkbox"]');
+
+            if (!date || !day || !pitClass || students.length === 0) {
+                alert('Maklumat tidak lengkap. Sila semak semula.');
+                return;
+            }
+
+            const attendanceData = {
+                date: date,
+                day: day,
+                pitClass: pitClass,
+                teacher: currentTeacher,
+                timestamp: new Date().toISOString(),
+                students: students.map((student, index) => ({
+                    ...student,
+                    present: checkboxes[index] ? checkboxes[index].checked : false
+                }))
+            };
+
+            // Save to localStorage
+            attendanceRecords.push(attendanceData);
+            localStorage.setItem('attendanceRecords', JSON.stringify(attendanceRecords));
+
+            // Show success message
+            alert('Kehadiran berjaya dihantar!');
+
+            // Close preview and show analysis
+            closePreview();
+            showAnalysis(attendanceData);
+            
+            // Reset form
+            document.getElementById('attendanceDate').value = new Date().toISOString().split('T')[0];
+            const todayDate = new Date();
+            const days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu'];
+            document.getElementById('attendanceDay').value = days[todayDate.getDay()];
+            document.getElementById('pitClass').value = '';
+            document.getElementById('studentsList').classList.add('hidden');
+        }
+
+        function showAnalysis(attendanceData) {
+            const absentStudents = attendanceData.students.filter(s => !s.present);
+            const maleAbsent = absentStudents.filter(s => s.gender === 'L').length;
+            const femaleAbsent = absentStudents.filter(s => s.gender === 'P').length;
+
+            const analysisContent = document.getElementById('analysisContent');
+            analysisContent.innerHTML = `
+                <div class="bg-blue-50 p-4 rounded-lg mb-4">
+                    <h4 class="font-semibold text-blue-800 mb-2">Ringkasan Kehadiran</h4>
+                    <p><strong>Kelas PIT:</strong> ${attendanceData.pitClass}</p>
+                    <p><strong>Tarikh:</strong> ${attendanceData.date}</p>
+                    <p><strong>Jumlah Murid:</strong> ${attendanceData.students.length}</p>
+                    <p><strong>Hadir:</strong> ${attendanceData.students.filter(s => s.present).length}</p>
+                    <p><strong>Tidak Hadir:</strong> ${absentStudents.length}</p>
+                </div>
+                <div class="bg-red-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-red-800 mb-2">Analisis Ketidakhadiran Mengikut Jantina</h4>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-blue-600">${maleAbsent}</div>
+                            <div class="text-sm text-gray-600">Lelaki Tidak Hadir</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-pink-600">${femaleAbsent}</div>
+                            <div class="text-sm text-gray-600">Perempuan Tidak Hadir</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('analysisModal').classList.remove('hidden');
+            updateTodaySubmissions();
+        }
+
+        function closeAnalysis() {
+            document.getElementById('analysisModal').classList.add('hidden');
+        }
+
+        function loadDailyRecord() {
+            const date = document.getElementById('recordDate').value;
+            const originalClass = document.getElementById('originalClass').value;
+
+            if (!date || !originalClass) {
+                document.getElementById('dailyRecordContainer').classList.add('hidden');
+                return;
+            }
+
+            // Get all students from the original class
+            const combinedData = getCombinedStudentsData();
+            const allStudentsInClass = [];
+            Object.keys(combinedData).forEach(pitClass => {
+                combinedData[pitClass].forEach(student => {
+                    if (student.originalClass === originalClass) {
+                        allStudentsInClass.push({
+                            ...student,
+                            pitClass: pitClass
+                        });
+                    }
+                });
+            });
+
+            // Filter records for the selected date
+            const relevantRecords = attendanceRecords.filter(record => record.date === date);
+            const submittedStudents = [];
+
+            relevantRecords.forEach(record => {
+                record.students.forEach(student => {
+                    if (student.originalClass === originalClass) {
+                        submittedStudents.push({
+                            ...student,
+                            pitClass: record.pitClass,
+                            teacher: record.teacher,
+                            submitted: true
+                        });
+                    }
+                });
+            });
+
+            // Create final list with submission status
+            const finalStudentList = allStudentsInClass.map(student => {
+                const submittedRecord = submittedStudents.find(s => s.name === student.name);
+                if (submittedRecord) {
+                    return submittedRecord;
+                } else {
+                    return {
+                        ...student,
+                        submitted: false,
+                        present: null,
+                        teacher: '-'
+                    };
+                }
+            });
+
+            const container = document.getElementById('dailyRecordContainer');
+            
+            if (finalStudentList.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-gray-500">
+                        <p>Tiada murid dalam kelas ${originalClass}</p>
+                    </div>
+                `;
+            } else {
+                const presentCount = finalStudentList.filter(s => s.present === true).length;
+                const absentCount = finalStudentList.filter(s => s.present === false).length;
+                const notUpdatedCount = finalStudentList.filter(s => s.present === null).length;
+
+                container.innerHTML = `
+                    <div class="mb-6">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-4">Rekod Kehadiran - ${originalClass}</h4>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                            <div class="bg-blue-50 p-4 rounded-lg text-center">
+                                <div class="text-2xl font-bold text-blue-600">${finalStudentList.length}</div>
+                                <div class="text-sm text-gray-600">Jumlah Murid</div>
+                            </div>
+                            <div class="bg-green-50 p-4 rounded-lg text-center">
+                                <div class="text-2xl font-bold text-green-600">${presentCount}</div>
+                                <div class="text-sm text-gray-600">Hadir</div>
+                            </div>
+                            <div class="bg-red-50 p-4 rounded-lg text-center">
+                                <div class="text-2xl font-bold text-red-600">${absentCount}</div>
+                                <div class="text-sm text-gray-600">Tidak Hadir</div>
+                            </div>
+                            <div class="bg-yellow-50 p-4 rounded-lg text-center">
+                                <div class="text-2xl font-bold text-yellow-600">${notUpdatedCount}</div>
+                                <div class="text-sm text-gray-600">Belum Dikemaskini</div>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full border-collapse border border-gray-300">
+                                <thead>
+                                    <tr class="bg-gray-50">
+                                        <th class="border border-gray-300 px-4 py-2 text-left">Nama Murid</th>
+                                        <th class="border border-gray-300 px-4 py-2 text-center">Jantina</th>
+                                        <th class="border border-gray-300 px-4 py-2 text-center">Kelas PIT</th>
+                                        <th class="border border-gray-300 px-4 py-2 text-center">Status</th>
+                                        <th class="border border-gray-300 px-4 py-2 text-center">Guru</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${finalStudentList.map(student => {
+                                        let statusClass, statusText;
+                                        if (student.present === true) {
+                                            statusClass = 'bg-green-100 text-green-800';
+                                            statusText = 'Hadir';
+                                        } else if (student.present === false) {
+                                            statusClass = 'bg-red-100 text-red-800';
+                                            statusText = 'Tidak Hadir';
+                                        } else {
+                                            statusClass = 'bg-yellow-100 text-yellow-800';
+                                            statusText = 'Belum Dikemaskini';
+                                        }
+                                        
+                                        return `
+                                            <tr class="${student.present === null ? 'bg-yellow-50' : ''}">
+                                                <td class="border border-gray-300 px-4 py-2">${student.name}</td>
+                                                <td class="border border-gray-300 px-4 py-2 text-center">${student.gender}</td>
+                                                <td class="border border-gray-300 px-4 py-2 text-center">${student.pitClass}</td>
+                                                <td class="border border-gray-300 px-4 py-2 text-center">
+                                                    <span class="px-2 py-1 rounded-full text-xs font-semibold ${statusClass}">
+                                                        ${statusText}
+                                                    </span>
+                                                </td>
+                                                <td class="border border-gray-300 px-4 py-2 text-center">${student.teacher}</td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        ${notUpdatedCount > 0 ? `
+                            <div class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                <h5 class="font-semibold text-yellow-800 mb-2">⚠️ Perhatian:</h5>
+                                <p class="text-yellow-700 text-sm">
+                                    Terdapat ${notUpdatedCount} murid yang kehadirannya belum dikemaskini untuk tarikh ini. 
+                                    Sila pastikan guru kelas PIT yang berkenaan menghantar kehadiran.
+                                </p>
+                            </div>
+                        ` : `
+                            <div class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <h5 class="font-semibold text-green-800 mb-2">✅ Lengkap:</h5>
+                                <p class="text-green-700 text-sm">
+                                    Semua murid dalam kelas ${originalClass} telah dikemaskini kehadirannya untuk tarikh ini.
+                                </p>
+                            </div>
+                        `}
+                    </div>
+                `;
+            }
+
+            container.classList.remove('hidden');
+        }
+
+        function updateTodaySubmissions() {
+            const today = new Date().toISOString().split('T')[0];
+            const todayRecords = attendanceRecords.filter(record => record.date === today);
+
+            const container = document.getElementById('todaySubmissions');
+            
+            if (todayRecords.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 col-span-full text-center">Belum ada kelas yang menghantar kehadiran hari ini</p>';
+            } else {
+                // Format date for display
+                const dateObj = new Date(today);
+                const formattedDate = dateObj.toLocaleDateString('ms-MY', {
+                    day: '2-digit',
+                    month: '2-digit', 
+                    year: 'numeric'
+                });
+
+                container.innerHTML = `
+                    <div class="col-span-full mb-4">
+                        <h4 class="font-semibold text-gray-800 mb-3">Tarikh: ${formattedDate}</h4>
+                    </div>
+                    ${todayRecords.map(record => `
+                        <div class="bg-green-100 text-green-800 px-3 py-2 rounded-lg text-sm">
+                            <div class="font-medium">${record.pitClass}</div>
+                            <div class="text-xs mt-1">Guru: ${record.teacher}</div>
+                        </div>
+                    `).join('')}
+                `;
+            }
+            
+            // Update weekly analysis
+            updateWeeklyAnalysis();
+        }
+
+        function updateWeeklyAnalysis() {
+            const today = new Date();
+            const startOfWeek = new Date(today);
+            // Start from Monday (1 = Monday, 0 = Sunday)
+            const dayOfWeek = today.getDay();
+            const daysFromMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // If Sunday, go back 6 days, else go back (day - 1)
+            startOfWeek.setDate(today.getDate() - daysFromMonday);
+            
+            const weekDates = [];
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(startOfWeek);
+                date.setDate(startOfWeek.getDate() + i);
+                weekDates.push(date.toISOString().split('T')[0]);
+            }
+
+            const weeklyRecords = attendanceRecords.filter(record => 
+                weekDates.includes(record.date)
+            );
+
+            const container = document.getElementById('weeklyAnalysis');
+            const dayNames = ['Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu', 'Ahad'];
+            const allClasses = ['1 MARIKH', '1 MUSYTARI', '1 NEPTUN', '1 UTARID', '1 URANUS', '1 ZUHAL', '1 ZUHRAH'];
+
+            if (weeklyRecords.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center">Belum ada rekod kehadiran untuk minggu ini</p>';
+                return;
+            }
+
+            // Group records by date
+            const recordsByDate = {};
+            weeklyRecords.forEach(record => {
+                if (!recordsByDate[record.date]) {
+                    recordsByDate[record.date] = [];
+                }
+                recordsByDate[record.date].push(record);
+            });
+
+            // Calculate weekly statistics
+            const totalSubmissions = weeklyRecords.length;
+            const uniqueClasses = [...new Set(weeklyRecords.map(r => r.pitClass))];
+            const totalPossibleSubmissions = allClasses.length * 7; // 7 classes × 7 days
+            const completionRate = ((totalSubmissions / totalPossibleSubmissions) * 100).toFixed(1);
+
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-blue-50 p-4 rounded-lg text-center">
+                        <div class="text-2xl font-bold text-blue-600">${totalSubmissions}</div>
+                        <div class="text-sm text-gray-600">Jumlah Hantar</div>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg text-center">
+                        <div class="text-2xl font-bold text-green-600">${uniqueClasses.length}</div>
+                        <div class="text-sm text-gray-600">Kelas Aktif</div>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded-lg text-center">
+                        <div class="text-2xl font-bold text-purple-600">${completionRate}%</div>
+                        <div class="text-sm text-gray-600">Kadar Lengkap</div>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse border border-gray-300">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="border border-gray-300 px-3 py-2 text-left">Hari</th>
+                                <th class="border border-gray-300 px-3 py-2 text-center">Tarikh</th>
+                                <th class="border border-gray-300 px-3 py-2 text-center">Kelas Hantar</th>
+                                <th class="border border-gray-300 px-3 py-2 text-left">Senarai Kelas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${weekDates.map((date, index) => {
+                                const dayRecords = recordsByDate[date] || [];
+                                const dateObj = new Date(date);
+                                const formattedDate = dateObj.toLocaleDateString('ms-MY', {
+                                    day: '2-digit',
+                                    month: '2-digit'
+                                });
+                                const dayName = dayNames[index];
+                                const isToday = date === new Date().toISOString().split('T')[0];
+                                
+                                return `
+                                    <tr class="${isToday ? 'bg-yellow-50' : ''}">
+                                        <td class="border border-gray-300 px-3 py-2 font-medium ${isToday ? 'text-yellow-800' : ''}">${dayName}${isToday ? ' (Hari Ini)' : ''}</td>
+                                        <td class="border border-gray-300 px-3 py-2 text-center">${formattedDate}</td>
+                                        <td class="border border-gray-300 px-3 py-2 text-center">
+                                            <span class="px-2 py-1 rounded-full text-xs font-semibold ${dayRecords.length > 0 ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}">
+                                                ${dayRecords.length}/7
+                                            </span>
+                                        </td>
+                                        <td class="border border-gray-300 px-3 py-2">
+                                            ${dayRecords.length > 0 ? 
+                                                dayRecords.map(r => `<span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mr-1 mb-1">${r.pitClass}</span>`).join('') :
+                                                '<span class="text-gray-400 text-sm">Tiada hantar</span>'
+                                            }
+                                        </td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-4 p-4 bg-gray-50 rounded-lg">
+                    <h4 class="font-semibold text-gray-800 mb-2">Kelas Yang Belum Menghantar Minggu Ini:</h4>
+                    <div class="flex flex-wrap gap-2">
+                        ${allClasses.filter(cls => !uniqueClasses.includes(cls)).map(cls => 
+                            `<span class="bg-red-100 text-red-800 text-sm px-3 py-1 rounded">${cls}</span>`
+                        ).join('') || '<span class="text-green-600 font-medium">Semua kelas telah menghantar!</span>'}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Auto-update day when date changes
+        document.getElementById('attendanceDate').addEventListener('change', function() {
+            const date = new Date(this.value);
+            const days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu'];
+            const dayName = days[date.getDay()];
+            
+            // Auto-fill the day field regardless of weekday/weekend
+            document.getElementById('attendanceDay').value = dayName;
+        });
+
+        // Auto-fill day on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('attendanceDate').value = today;
+            document.getElementById('recordDate').value = today;
+            
+            // Auto-fill today's day
+            const todayDate = new Date();
+            const days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu'];
+            const todayName = days[todayDate.getDay()];
+            document.getElementById('attendanceDay').value = todayName;
+            
+            // Initialize teacher dropdown
+            updateTeacherDropdown();
+            
+            updateTodaySubmissions();
+        });
+
+        document.getElementById('recordDate').addEventListener('change', function() {
+            if (document.getElementById('originalClass').value) {
+                loadDailyRecord();
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96220fbea0207137',t:'MTc1MzAxMDM0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
