@@ -1,9 +1,10 @@
+:
+
 {
   "name": "sistem-kehadiran-sk-pekan-kinarut",
   "version": "1.0.0",
   "description": "Sistem Kehadiran Murid Tahun 1 - SK Pekan Kinarut",
   "dependencies": {
     "@neondatabase/serverless": "^0.9.0"
-  },
-  "type": "module"
+  }
 }
