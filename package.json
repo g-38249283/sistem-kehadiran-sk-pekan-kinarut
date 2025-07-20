@@ -1,0 +1,9 @@
+{
+  "name": "sistem-kehadiran-sk-pekan-kinarut",
+  "version": "1.0.0",
+  "description": "Sistem Kehadiran Murid Tahun 1 - SK Pekan Kinarut",
+  "dependencies": {
+    "@netlify/neon": "^0.8.0"
+  },
+  "type": "module"
+}
