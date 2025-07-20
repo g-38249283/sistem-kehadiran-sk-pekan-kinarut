@@ -1,5 +1,3 @@
-:
-
 const { neon } = require('@neondatabase/serverless');
 
 exports.handler = async (event, context) => {
