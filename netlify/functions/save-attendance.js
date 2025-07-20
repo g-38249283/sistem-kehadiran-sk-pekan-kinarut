@@ -1,14 +1,18 @@
-import { neon } from '@netlify/neon';
+:
 
-export default async (req, context) => {
-  if (req.method !== 'POST') {
-    return new Response('Method Not Allowed', { status: 405 });
+const { neon } = require('@neondatabase/serverless');
+
+exports.handler = async (event, context) => {
+  if (event.httpMethod !== 'POST') {
+    return {
+      statusCode: 405,
+      body: 'Method Not Allowed'
+    };
   }
 
-  const sql = neon();
-  
   try {
-    const { date, day, pitClass, teacher, students } = await req.json();
+    const sql = neon(process.env.DATABASE_URL);
+    const { date, day, pitClass, teacher, students } = JSON.parse(event.body);
     
     // Delete existing records for this date and class
     await sql`
@@ -25,18 +29,20 @@ export default async (req, context) => {
       `;
     }
     
-    return new Response(JSON.stringify({ success: true }), {
-      status: 200,
+    return {
+      statusCode: 200,
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
-      }
-    });
+      },
+      body: JSON.stringify({ success: true })
+    };
   } catch (error) {
     console.error('Database error:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: error.message })
+    };
   }
 };
