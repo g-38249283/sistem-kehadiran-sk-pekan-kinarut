@@ -1,13 +1,14 @@
-import { neon } from '@netlify/neon';
+:
+
+import { neon } from '@neondatabase/serverless';
 
 export default async (req, context) => {
   if (req.method !== 'POST') {
     return new Response('Method Not Allowed', { status: 405 });
   }
 
-  const sql = neon();
-  
   try {
+    const sql = neon(process.env.DATABASE_URL);
     const { name, addedBy } = await req.json();
     
     await sql`
