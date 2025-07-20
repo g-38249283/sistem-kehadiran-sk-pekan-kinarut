@@ -1,27 +1,29 @@
 :
 
-import { neon } from '@neondatabase/serverless';
+const { neon } = require('@neondatabase/serverless');
 
-export default async (req, context) => {
+exports.handler = async (event, context) => {
   try {
     const sql = neon(process.env.DATABASE_URL);
     const teachers = await sql`SELECT name FROM teachers ORDER BY name`;
     
-    return new Response(JSON.stringify(teachers.map(row => row.name)), {
-      status: 200,
+    return {
+      statusCode: 200,
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
-      }
-    });
+      },
+      body: JSON.stringify(teachers.map(row => row.name))
+    };
   } catch (error) {
     console.error('Database error:', error);
-    return new Response(JSON.stringify({ 
-      error: error.message,
-      details: 'Check database connection'
-    }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        error: error.message,
+        details: 'Check database connection'
+      })
+    };
   }
 };
